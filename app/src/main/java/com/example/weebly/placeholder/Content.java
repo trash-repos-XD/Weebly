@@ -9,24 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.BlockingDeque;
 
-/**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
- * <p>
- * TODO: Replace all uses of this class before publishing your app.
- */
 public class Content {
 
-    /**
-     * An array of sample (placeholder) items.
-     */
     public static final List<AnimeSched> ITEMS_mon = new ArrayList<AnimeSched>();
     public static final List<AnimeSched> ITEMS_tue = new ArrayList<AnimeSched>();
     public static final List<AnimeSched> ITEMS_wed = new ArrayList<AnimeSched>();
@@ -111,19 +98,42 @@ public class Content {
         public final double score;
         public final double popularity;
         public final String synopsis;
-        public final String[] genres;
+        public final String genres;
         public final String trailer;
         public final String trailerUrl;
 
         public AnimeSched(JSONObject parsedResponse) throws JSONException {
+            JSONArray parsedGenres = parsedResponse.getJSONArray("genres");
+
+            String genres = "";
+            String synopsis = parsedResponse.getString("synopsis");
+            int synopsisLength = 150;
+
+
+            if (synopsis.equals("null")) {
+                synopsis = "No Synopsis";
+            } else if (synopsis.length() > synopsisLength) {
+                synopsis = synopsis.substring(0, synopsisLength) + "...";
+            }
+
+            for (int i = 0; i < parsedGenres.length(); i++) {
+                String genre = parsedGenres.getString(i);
+                if (i == parsedGenres.length() - 1) {
+                    genres += genre + ".";
+                    break;
+                }
+                genres += genre + ", ";
+            }
+
             this.id = String.valueOf(parsedResponse.getInt("id"));
+
             this.maUrl = "";
-            this.thumbnail = "";
+            this.thumbnail = parsedResponse.getString("thumbnail");
             this.name = parsedResponse.getString("name");
             this.score = 10;
             this.popularity = 10;
-            this.synopsis = "";
-            this.genres = new String[]{"Action", "Adventure"};
+            this.synopsis = synopsis;
+            this.genres = genres;
             this.trailer = "";
             this.trailerUrl = "";
         }
