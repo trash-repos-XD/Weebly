@@ -1,14 +1,20 @@
 package com.example.weebly;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.weebly.placeholder.Content;
 
 /**
@@ -25,10 +31,10 @@ public class ItemFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ItemFragment newInstance(String data) {
+    public static ItemFragment newInstance(String day) {
         ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_DATA, data);
+        args.putString(ARG_DATA, day);
 
         fragment.setArguments(args);
         return fragment;
@@ -50,6 +56,7 @@ public class ItemFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,9 +69,9 @@ public class ItemFragment extends Fragment {
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context,1));
+                recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Content.ITEMS));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Content.getItemByDay(mData)));
         }
         return view;
     }
