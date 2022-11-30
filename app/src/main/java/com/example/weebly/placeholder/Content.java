@@ -132,7 +132,7 @@ public class Content {
             this.popularity = parsedResponse.getString("popularity");
             this.synopsis = synopsis;
             this.genres = genres.toString();
-            this.trailer = "";
+            this.trailer = parsedResponse.getString("trailer");
             this.trailerUrl = parsedResponse.getString("trailerUrl");
         }
     }

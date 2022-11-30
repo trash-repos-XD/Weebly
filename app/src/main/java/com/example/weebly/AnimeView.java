@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +51,18 @@ public class AnimeView extends AppCompatActivity {
             startActivity(intent);
 //            Toast.makeText(this, theAnime.malUrl, Toast.LENGTH_LONG).show();
         });
+
+        if (theAnime.trailer.equals("null")) {
+            TextView trailerText = findViewById(R.id.trailer_text);
+            trailerText.setText("No Trailer");
+        } else {
+
+            WebView webView = findViewById(R.id.webView);
+            webView.loadUrl(theAnime.trailer);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setWebViewClient(new WebViewClient());
+        }
+
 
     }
 
