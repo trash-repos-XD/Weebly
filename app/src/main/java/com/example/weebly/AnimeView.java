@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,12 +54,17 @@ public class AnimeView extends AppCompatActivity {
 //            Toast.makeText(this, theAnime.malUrl, Toast.LENGTH_LONG).show();
         });
 
+        WebView webView = findViewById(R.id.webView);
         if (theAnime.trailer.equals("null")) {
             TextView trailerText = findViewById(R.id.trailer_text);
             trailerText.setText("No Trailer");
-        } else {
+            webView.setVisibility(View.GONE);
 
-            WebView webView = findViewById(R.id.webView);
+            LinearLayout trailerContainer = findViewById(R.id.trailer_container);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) trailerContainer.getLayoutParams();
+            params.height = 100;
+            trailerContainer.setLayoutParams(params);
+        } else {
             webView.loadUrl(theAnime.trailer);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient());
