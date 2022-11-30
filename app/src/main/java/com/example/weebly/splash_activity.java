@@ -1,13 +1,13 @@
 package com.example.weebly;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.weebly.helpers.CacheHelper;
 import com.example.weebly.placeholder.Content;
@@ -22,17 +22,17 @@ import java.net.URL;
 
 public class splash_activity extends AppCompatActivity {
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
         String cached = CacheHelper.read(this, "schedules.json");
+
         if (cached == null || cached.length() == 0) {
-            Log.e("HEHE", "POTA");
             new SendGetRequest(this).execute();
         } else {
-            Log.e("HEHE", cached);
             toHome(getApplicationContext(), cached);
         }
     }
@@ -45,13 +45,11 @@ public class splash_activity extends AppCompatActivity {
 
     class SendGetRequest extends AsyncTask<String, Void, String> {
 
-        private Context ctx;
+        private final Context ctx;
 
         public SendGetRequest(Context context) {
             ctx = context;
         }
-
-        private Exception exception;
 
         public String sendRequest(String targetURL) throws IOException {
 
@@ -91,10 +89,7 @@ public class splash_activity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String res) {
-//            Gson gson = new Gson();
-//            Log.e("GSON", gson.toJson(res).getClass().toString());
             CacheHelper.create(ctx, res);
-
             toHome(ctx, res);
         }
     }

@@ -1,7 +1,6 @@
 package com.example.weebly.placeholder;
 
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -14,13 +13,13 @@ import java.util.List;
 
 public class Content {
 
-    public static final List<AnimeSched> ITEMS_mon = new ArrayList<AnimeSched>();
-    public static final List<AnimeSched> ITEMS_tue = new ArrayList<AnimeSched>();
-    public static final List<AnimeSched> ITEMS_wed = new ArrayList<AnimeSched>();
-    public static final List<AnimeSched> ITEMS_thu = new ArrayList<AnimeSched>();
-    public static final List<AnimeSched> ITEMS_fri = new ArrayList<AnimeSched>();
-    public static final List<AnimeSched> ITEMS_sat = new ArrayList<AnimeSched>();
-    public static final List<AnimeSched> ITEMS_sun = new ArrayList<AnimeSched>();
+    public static final List<AnimeSched> ITEMS_mon = new ArrayList<>();
+    public static final List<AnimeSched> ITEMS_tue = new ArrayList<>();
+    public static final List<AnimeSched> ITEMS_wed = new ArrayList<>();
+    public static final List<AnimeSched> ITEMS_thu = new ArrayList<>();
+    public static final List<AnimeSched> ITEMS_fri = new ArrayList<>();
+    public static final List<AnimeSched> ITEMS_sat = new ArrayList<>();
+    public static final List<AnimeSched> ITEMS_sun = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<AnimeSched> getItemByDay(String day) {
@@ -103,7 +102,7 @@ public class Content {
         public AnimeSched(JSONObject parsedResponse) throws JSONException {
             JSONArray parsedGenres = parsedResponse.getJSONArray("genres");
 
-            String genres = "";
+            StringBuilder genres = new StringBuilder();
             String synopsis = parsedResponse.getString("synopsis");
             int synopsisLength = 150;
 
@@ -117,10 +116,10 @@ public class Content {
             for (int i = 0; i < parsedGenres.length(); i++) {
                 String genre = parsedGenres.getString(i);
                 if (i == parsedGenres.length() - 1) {
-                    genres += genre + ".";
+                    genres.append(genre).append(".");
                     break;
                 }
-                genres += genre + ", ";
+                genres.append(genre).append(", ");
             }
 
             this.id = String.valueOf(parsedResponse.getInt("id"));
@@ -131,7 +130,7 @@ public class Content {
             this.score = 10;
             this.popularity = 10;
             this.synopsis = synopsis;
-            this.genres = genres;
+            this.genres = genres.toString();
             this.trailer = "";
             this.trailerUrl = "";
         }
