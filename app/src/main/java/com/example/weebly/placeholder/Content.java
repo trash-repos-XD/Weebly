@@ -24,7 +24,6 @@ public class Content {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<AnimeSched> getItemByDay(String day) {
-        Log.e("D DAY", day);
         switch (day.toLowerCase()) {
             case "sun":
                 return ITEMS_sun;
@@ -47,8 +46,6 @@ public class Content {
 
     public static void initItems(String jsonData) {
         try {
-            Log.e("THE JSON", new JSONArray(jsonData).getJSONObject(0).getJSONArray("schedules").toString());
-
             JSONArray schedules = new JSONArray(jsonData);
             for (int i = 0; i < schedules.length(); i++) {
                 JSONObject daySched = schedules.getJSONObject(i);

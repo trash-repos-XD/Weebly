@@ -74,7 +74,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-//        TODO: cache the images
+        //        TODO: cache the images
         ImageView bmImage;
 
         public DownloadImageTask(ImageView bmImage) {
