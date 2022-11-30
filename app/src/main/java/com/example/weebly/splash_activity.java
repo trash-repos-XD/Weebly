@@ -8,16 +8,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.weebly.helpers.CacheHelper;
 import com.example.weebly.placeholder.Content;
-import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,12 +27,13 @@ public class splash_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        String cached = CacheHelper.retrieve(this, "xd");
-        Log.e("test", CacheHelper.retrieve(this, "xd"));
-        if (cached.length() == 0) {
+        String cached = CacheHelper.read(this, "schedules.json");
+        if (cached == null || cached.length() == 0) {
+            Log.e("HEHE", "POTA");
             new SendGetRequest(this).execute();
         } else {
-            toHome(getApplicationContext(), cached.toString());
+            Log.e("HEHE", cached);
+            toHome(getApplicationContext(), cached);
         }
     }
 
@@ -96,9 +91,9 @@ public class splash_activity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String res) {
-            Gson gson = new Gson();
-            Log.e("GSON", gson.toJson(res).getClass().toString());
-            CacheHelper.save(ctx, "xd", gson.toJson(res).substring(0, 100));
+//            Gson gson = new Gson();
+//            Log.e("GSON", gson.toJson(res).getClass().toString());
+            CacheHelper.create(ctx, res);
 
             toHome(ctx, res);
         }

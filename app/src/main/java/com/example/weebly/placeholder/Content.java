@@ -55,7 +55,8 @@ public class Content {
                 }
             }
         } catch (JSONException e) {
-            Log.e("JSON EXCEPTION", e.toString());
+            e.printStackTrace();
+//            Log.e("JSON EXCEPTION", e.);
         }
     }
 
