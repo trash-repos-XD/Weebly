@@ -4,7 +4,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,13 +50,11 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mNameView;
         public final TextView mGenreView;
         public final ImageView mImageView;
         public final TextView mSynopsisView;
-
-        public AnimeSched mItem;
 
         public ViewHolder(FragmentItemBinding binding) {
             super(binding.getRoot());
@@ -73,8 +70,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        //        TODO: cache the images
+    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        //                TODO: cache the images
         ImageView bmImage;
 
         public DownloadImageTask(ImageView bmImage) {
