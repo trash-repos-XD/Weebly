@@ -1,6 +1,7 @@
 package com.example.weebly.placeholder;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -8,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +52,16 @@ public class Content {
                 JSONObject daySched = schedules.getJSONObject(i);
                 JSONArray scheds = daySched.getJSONArray("schedules");
                 for (int j = 0; j < scheds.length(); j++) {
-                    addItem(new AnimeSched(scheds.getJSONObject(j)), daySched.getString("day").substring(0, 3).toLowerCase());
+                    AnimeSched theSched = new AnimeSched(scheds.getJSONObject(j));
+                    Log.e("SCORE", theSched.score);
+                    if (theSched.score.equals("null")) {
+                        continue;
+                    }
+                    addItem(theSched, daySched.getString("day").substring(0, 3).toLowerCase());
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-//            Log.e("JSON EXCEPTION", e.);
         }
     }
 
@@ -87,13 +93,13 @@ public class Content {
     }
 
 
-    public static class AnimeSched {
-        public final String maUrl;
+    public static class AnimeSched implements Serializable {
+        public final String malUrl;
         public final String id;
         public final String thumbnail;
         public final String name;
-        public final double score;
-        public final double popularity;
+        public final String score;
+        public final String popularity;
         public final String synopsis;
         public final String genres;
         public final String trailer;
@@ -104,13 +110,9 @@ public class Content {
 
             StringBuilder genres = new StringBuilder();
             String synopsis = parsedResponse.getString("synopsis");
-            int synopsisLength = 150;
-
 
             if (synopsis.equals("null")) {
                 synopsis = "No Synopsis";
-            } else if (synopsis.length() > synopsisLength) {
-                synopsis = synopsis.substring(0, synopsisLength) + "...";
             }
 
             for (int i = 0; i < parsedGenres.length(); i++) {
@@ -123,16 +125,15 @@ public class Content {
             }
 
             this.id = String.valueOf(parsedResponse.getInt("id"));
-
-            this.maUrl = "";
+            this.malUrl = parsedResponse.getString("malUrl");
             this.thumbnail = parsedResponse.getString("thumbnail");
             this.name = parsedResponse.getString("name");
-            this.score = 10;
-            this.popularity = 10;
+            this.score = parsedResponse.getString("score");
+            this.popularity = parsedResponse.getString("popularity");
             this.synopsis = synopsis;
             this.genres = genres.toString();
             this.trailer = "";
-            this.trailerUrl = "";
+            this.trailerUrl = parsedResponse.getString("trailerUrl");
         }
     }
 }

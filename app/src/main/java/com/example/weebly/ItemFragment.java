@@ -17,20 +17,13 @@ import android.view.ViewGroup;
 
 import com.example.weebly.placeholder.Content;
 
-/**
- * A fragment representing a list of Items.
- */
 public class ItemFragment extends Fragment {
 
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private String mData = "Nothing to see here.";
 
-    // TODO: Customize parameter argument names
     private static final String ARG_DATA = "data";
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static ItemFragment newInstance(String day) {
         ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
@@ -71,7 +64,7 @@ public class ItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Content.getItemByDay(mData)));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Content.getItemByDay(mData), getActivity()));
         }
         return view;
     }

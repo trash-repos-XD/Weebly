@@ -1,20 +1,20 @@
 package com.example.weebly;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.weebly.helpers.CacheHelper;
 import com.example.weebly.placeholder.Content.AnimeSched;
 import com.example.weebly.databinding.FragmentItemBinding;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -24,25 +24,37 @@ import java.util.List;
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<AnimeSched> mValues;
+    private final Context mContext;
 
-    public MyItemRecyclerViewAdapter(List<AnimeSched> items) {
+    public MyItemRecyclerViewAdapter(List<AnimeSched> items, Context ctx) {
         mValues = items;
+        mContext = ctx;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         return new ViewHolder(FragmentItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        new DownloadImageTask(holder.mImageView)
+        new CacheHelper.DownloadImageTask(holder.mImageView)
                 .execute(mValues.get(position).thumbnail);
         holder.mNameView.setText(mValues.get(position).name);
         holder.mGenreView.setText(mValues.get(position).genres);
-        holder.mSynopsisView.setText(mValues.get(position).synopsis);
+
+        String synopsisContent = mValues.get(position).synopsis;
+        int synopsisLength = 150;
+        if (synopsisContent.length() > synopsisLength) {
+            synopsisContent = synopsisContent.substring(0, synopsisLength) + "...";
+        }
+
+        holder.mSynopsisView.setText(synopsisContent);
+        holder.mViewAnimeButton.setOnClickListener(view -> {
+            Intent intent = new Intent(mContext, AnimeView.class);
+            intent.putExtra("theAnime", mValues.get(position));
+            mContext.startActivity(intent);
+        });
     }
 
     @Override
@@ -55,6 +67,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final TextView mGenreView;
         public final ImageView mImageView;
         public final TextView mSynopsisView;
+        public final TextView mViewAnimeButton;
 
         public ViewHolder(FragmentItemBinding binding) {
             super(binding.getRoot());
@@ -62,6 +75,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             mNameView = binding.name;
             mGenreView = binding.genres;
             mSynopsisView = binding.synopsis;
+            mViewAnimeButton = binding.viewAnimeButton;
         }
 
         @Override
@@ -70,29 +84,4 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         }
     }
 
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        //                TODO: cache the images
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 }

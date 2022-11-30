@@ -16,6 +16,10 @@
         android:theme="@style/Theme.Weebly"
         tools:targetApi="31">
         <activity
+            android:name=".AnimeView"
+            android:exported="false"
+            android:parentActivityName="com.example.weebly.MainActivity" />
+        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.Weebly.NoActionBar" />
