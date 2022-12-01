@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Content {
@@ -25,24 +27,37 @@ public class Content {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<AnimeSched> getItemByDay(String day) {
+        List<AnimeSched> toReturn;
         switch (day.toLowerCase()) {
             case "sun":
-                return ITEMS_sun;
+                toReturn = ITEMS_sun;
+                break;
             case "mon":
-                return ITEMS_mon;
+                toReturn = ITEMS_mon;
+                break;
             case "tue":
-                return ITEMS_tue;
+                toReturn = ITEMS_tue;
+                break;
             case "wed":
-                return ITEMS_wed;
+                toReturn = ITEMS_wed;
+                break;
             case "thu":
-                return ITEMS_thu;
+                toReturn = ITEMS_thu;
+                break;
             case "fri":
-                return ITEMS_fri;
+                toReturn = ITEMS_fri;
+                break;
             case "sat":
-                return ITEMS_sat;
+                toReturn = ITEMS_sat;
+                break;
             default:
-                return new ArrayList<>();
+                toReturn = new ArrayList<>();
+                break;
         }
+
+        Collections.sort(toReturn, (obj1, obj2) -> obj2.score.compareToIgnoreCase(obj1.score));
+
+        return toReturn;
     }
 
     public static void initItems(String jsonData) {
