@@ -7,10 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import com.example.weebly.placeholder.Content;
 
 public class ItemFragment extends Fragment {
 
-    private int mColumnCount = 1;
     private String mData = "Nothing to see here.";
 
     private static final String ARG_DATA = "data";
@@ -59,11 +56,7 @@ public class ItemFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
-            }
+            recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
             recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Content.getItemByDay(mData), getActivity()));
         }
         return view;

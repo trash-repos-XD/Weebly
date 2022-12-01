@@ -1,19 +1,17 @@
 package com.example.weebly;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.weebly.helpers.CacheHelper;
 import com.example.weebly.placeholder.Content.AnimeSched;
 import com.example.weebly.databinding.FragmentItemBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -38,8 +36,12 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        new CacheHelper.DownloadImageTask(holder.mImageView)
-                .execute(mValues.get(position).thumbnail);
+        Picasso.get()
+                .load(mValues.get(position).thumbnail)
+                .placeholder(R.drawable.weebly)
+                .error(R.drawable.weebly)
+                .into(holder.mImageView);
+
         holder.mNameView.setText(mValues.get(position).name);
         holder.mGenreView.setText(mValues.get(position).genres);
 

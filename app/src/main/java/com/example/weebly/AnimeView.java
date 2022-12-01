@@ -3,7 +3,6 @@ package com.example.weebly;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -11,12 +10,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.weebly.helpers.CacheHelper;
 import com.example.weebly.placeholder.Content;
+import com.squareup.picasso.Picasso;
 
 public class AnimeView extends AppCompatActivity {
 
@@ -44,14 +42,16 @@ public class AnimeView extends AppCompatActivity {
         synopsis.setText(theAnime.synopsis);
         genres.setText(theAnime.genres);
 
-        new CacheHelper.DownloadImageTask(thumbnail)
-                .execute(theAnime.thumbnail);
+        Picasso.get()
+                .load(theAnime.thumbnail)
+                .placeholder(R.drawable.weebly)
+                .error(R.drawable.weebly)
+                .into(thumbnail);
 
         malUrl.setOnClickListener(view -> {
             Uri uri = Uri.parse(theAnime.malUrl);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
-//            Toast.makeText(this, theAnime.malUrl, Toast.LENGTH_LONG).show();
         });
 
         WebView webView = findViewById(R.id.webView);
@@ -69,8 +69,5 @@ public class AnimeView extends AppCompatActivity {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient());
         }
-
-
     }
-
 }
