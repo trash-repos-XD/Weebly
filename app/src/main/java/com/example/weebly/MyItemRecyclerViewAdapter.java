@@ -4,16 +4,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.weebly.helpers.FavoritesDbHelper;
 import com.example.weebly.placeholder.Content.AnimeSched;
 import com.example.weebly.databinding.FragmentItemBinding;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link AnimeSched}.
@@ -45,6 +48,27 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         holder.mNameView.setText(mValues.get(position).name);
         holder.mGenreView.setText(mValues.get(position).genres);
 
+        holder.theId = mValues.get(position).id;
+        AtomicBoolean isFavorite = new AtomicBoolean(FavoritesDbHelper.getAllFavorites(mContext).contains(holder.theId));
+
+        if(isFavorite.get()){
+            holder.mFavorite.setImageResource(R.drawable.star_on);
+        }
+
+        holder.mFavorite.setOnClickListener(view->{
+            if(isFavorite.get()){
+                Log.e("TAG", "onBindViewHolder: " );
+                isFavorite.set(false);
+                FavoritesDbHelper.removeFavorite(mContext,holder.theId);
+                holder.mFavorite.setImageResource(R.drawable.star_off);
+            }else{
+                FavoritesDbHelper.addFavorite(mContext,holder.theId);
+                holder.mFavorite.setImageResource(R.drawable.star_on);
+            }
+            notifyDataSetChanged();
+        });
+
+
         String synopsisContent = mValues.get(position).synopsis;
         int synopsisLength = 150;
         if (synopsisContent.length() > synopsisLength) {
@@ -70,6 +94,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final ImageView mImageView;
         public final TextView mSynopsisView;
         public final TextView mViewAnimeButton;
+        public final ImageView mFavorite;
+        String theId;
 
         public ViewHolder(FragmentItemBinding binding) {
             super(binding.getRoot());
@@ -78,6 +104,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             mGenreView = binding.genres;
             mSynopsisView = binding.synopsis;
             mViewAnimeButton = binding.viewAnimeButton;
+            mFavorite = binding.favoriteButton;
+            theId="";
         }
 
         @Override
