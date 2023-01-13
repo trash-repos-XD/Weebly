@@ -63,7 +63,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                 FavoritesDbHelper.addFavorite(mContext,holder.theId);
                 holder.mFavorite.setImageResource(R.drawable.star_on);
             }
-            notifyItemChanged(position);
+            notifyDataSetChanged();
         });
 
 
