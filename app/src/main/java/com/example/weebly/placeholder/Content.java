@@ -53,7 +53,7 @@ public class Content {
                 break;
         }
         if(!searchString.isEmpty()){
-            toReturn.removeIf(x->!(x.name + " "+ x.genres).toLowerCase().contains(searchString.toLowerCase()));
+            toReturn.removeIf(x->!(x.name + " "+ x.genres).toLowerCase().contains(searchString.toLowerCase().trim()));
         }
 
         Collections.sort(toReturn, (obj1, obj2) -> obj2.score.compareToIgnoreCase(obj1.score));

@@ -18,17 +18,11 @@ import com.example.weebly.helpers.FavoritesDbHelper;
 import com.example.weebly.placeholder.Content;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.function.Consumer;
 
 public class ItemFragment extends Fragment {
 
     private String mData = "Nothing to see here.";
-    private String mSearchString = "";
 
     private static final String ARG_DATA = "data";
 
