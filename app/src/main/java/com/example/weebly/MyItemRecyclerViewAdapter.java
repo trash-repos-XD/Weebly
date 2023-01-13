@@ -4,11 +4,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.weebly.helpers.FavoritesDbHelper;
 import com.example.weebly.placeholder.Content.AnimeSched;
@@ -16,7 +16,6 @@ import com.example.weebly.databinding.FragmentItemBinding;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link AnimeSched}.
@@ -39,6 +38,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         Picasso.get()
                 .load(mValues.get(position).thumbnail)
                 .placeholder(R.drawable.weebly)
@@ -49,23 +49,21 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         holder.mGenreView.setText(mValues.get(position).genres);
 
         holder.theId = mValues.get(position).id;
-        AtomicBoolean isFavorite = new AtomicBoolean(FavoritesDbHelper.getAllFavorites(mContext).contains(holder.theId));
+        boolean isFavorite =FavoritesDbHelper.getAllFavorites(mContext).contains(holder.theId);
 
-        if(isFavorite.get()){
+        if(isFavorite){
             holder.mFavorite.setImageResource(R.drawable.star_on);
         }
 
         holder.mFavorite.setOnClickListener(view->{
-            if(isFavorite.get()){
-                Log.e("TAG", "onBindViewHolder: " );
-                isFavorite.set(false);
+            if(isFavorite){
                 FavoritesDbHelper.removeFavorite(mContext,holder.theId);
                 holder.mFavorite.setImageResource(R.drawable.star_off);
             }else{
                 FavoritesDbHelper.addFavorite(mContext,holder.theId);
                 holder.mFavorite.setImageResource(R.drawable.star_on);
             }
-            notifyDataSetChanged();
+            notifyItemChanged(position);
         });
 
 

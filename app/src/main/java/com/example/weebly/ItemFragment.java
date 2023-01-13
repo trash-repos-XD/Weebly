@@ -4,6 +4,8 @@ package com.example.weebly;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,9 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.weebly.helpers.FavoritesDbHelper;
 import com.example.weebly.placeholder.Content;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.function.Consumer;
 
 public class ItemFragment extends Fragment {
 
@@ -57,7 +66,22 @@ public class ItemFragment extends Fragment {
             MainActivity main  =(MainActivity) getActivity();
 
             List<Content.AnimeSched> items = Content.getItemByDay(mData,main.searchText);
-            MyItemRecyclerViewAdapter theAdapter= new MyItemRecyclerViewAdapter(items, getActivity());
+            ArrayList<String> favorites = FavoritesDbHelper.getAllFavorites(context);
+
+            ArrayList<Content.AnimeSched> finalList= new ArrayList<>();
+            ArrayList<Content.AnimeSched> notFavorites= new ArrayList<>();
+            items.forEach(animeSched -> {
+                if(favorites.contains(animeSched.id)){
+                    finalList.add(animeSched);
+                }else{
+                    notFavorites.add(animeSched);
+                }
+            });
+
+            finalList.addAll(notFavorites);
+
+
+            MyItemRecyclerViewAdapter theAdapter= new MyItemRecyclerViewAdapter(finalList, getActivity());
 
             recyclerView.setAdapter(theAdapter);
         }

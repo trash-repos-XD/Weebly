@@ -4,6 +4,7 @@ import android.util.Log;
 
 
 import com.example.weebly.MyItemRecyclerViewAdapter;
+import com.example.weebly.helpers.FavoritesDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
