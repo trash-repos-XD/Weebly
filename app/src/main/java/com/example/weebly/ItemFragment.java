@@ -1,23 +1,29 @@
 package com.example.weebly;
 
+
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.weebly.placeholder.Content;
 
+import java.util.List;
+
 public class ItemFragment extends Fragment {
 
     private String mData = "Nothing to see here.";
+    private String mSearchString = "";
 
     private static final String ARG_DATA = "data";
 
@@ -30,10 +36,6 @@ public class ItemFragment extends Fragment {
         return fragment;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ItemFragment() {
     }
 
@@ -46,18 +48,23 @@ public class ItemFragment extends Fragment {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        String theTag = this.getTag();
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Content.getItemByDay(mData), getActivity()));
+
+            MainActivity main  =(MainActivity) getActivity();
+
+            List<Content.AnimeSched> items = Content.getItemByDay(mData,main.searchText);
+            MyItemRecyclerViewAdapter theAdapter= new MyItemRecyclerViewAdapter(items, getActivity());
+
+            recyclerView.setAdapter(theAdapter);
         }
         return view;
     }

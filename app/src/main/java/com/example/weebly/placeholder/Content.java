@@ -1,9 +1,9 @@
 package com.example.weebly.placeholder;
 
-import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
+
+import com.example.weebly.MyItemRecyclerViewAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class Content {
@@ -25,34 +24,35 @@ public class Content {
     public static final List<AnimeSched> ITEMS_sat = new ArrayList<>();
     public static final List<AnimeSched> ITEMS_sun = new ArrayList<>();
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public static List<AnimeSched> getItemByDay(String day) {
-        List<AnimeSched> toReturn;
+    public static List<AnimeSched> getItemByDay(String day, String searchString) {
+        List<AnimeSched> toReturn = new ArrayList<>();
         switch (day.toLowerCase()) {
             case "sun":
-                toReturn = ITEMS_sun;
+                toReturn.addAll(ITEMS_sun);
                 break;
             case "mon":
-                toReturn = ITEMS_mon;
+                toReturn.addAll(ITEMS_mon);
                 break;
             case "tue":
-                toReturn = ITEMS_tue;
+                toReturn.addAll(ITEMS_tue);
                 break;
             case "wed":
-                toReturn = ITEMS_wed;
+                toReturn.addAll(ITEMS_wed);
                 break;
             case "thu":
-                toReturn = ITEMS_thu;
+                toReturn.addAll(ITEMS_thu);
                 break;
             case "fri":
-                toReturn = ITEMS_fri;
+                toReturn.addAll(ITEMS_fri);
                 break;
             case "sat":
-                toReturn = ITEMS_sat;
+                toReturn.addAll(ITEMS_sat);
                 break;
             default:
-                toReturn = new ArrayList<>();
                 break;
+        }
+        if(!searchString.isEmpty()){
+            toReturn.removeIf(x->!(x.name + " "+ x.genres).toLowerCase().contains(searchString.toLowerCase()));
         }
 
         Collections.sort(toReturn, (obj1, obj2) -> obj2.score.compareToIgnoreCase(obj1.score));
@@ -68,7 +68,6 @@ public class Content {
                 JSONArray scheds = daySched.getJSONArray("schedules");
                 for (int j = 0; j < scheds.length(); j++) {
                     AnimeSched theSched = new AnimeSched(scheds.getJSONObject(j));
-                    Log.e("SCORE", theSched.score);
                     if (theSched.score.equals("null")) {
                         continue;
                     }
@@ -106,7 +105,6 @@ public class Content {
                 break;
         }
     }
-
 
     public static class AnimeSched implements Serializable {
         public final String malUrl;

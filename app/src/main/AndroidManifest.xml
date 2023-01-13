@@ -22,7 +22,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.Weebly.NoActionBar" />
+            android:theme="@style/Theme.Weebly.NoActionBar"
+            />
         <activity
             android:name=".splash_activity"
             android:exported="true"
